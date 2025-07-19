@@ -1,4 +1,4 @@
--- Netflix Data Analysis using SQL (MySQL Version)
+-- Netflix Data Analysis Project
 -- Solutions to 15 business problems
 
 -- 1. Count the number of Movies vs TV Shows
