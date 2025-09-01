@@ -1,5 +1,5 @@
 -- Netflix Movies & TV Shows Analysis Project
--- Solutions of 13 Business Problems
+-- Solutions of 15 Business Problems
 
 -- 1. Count the number of Movies and TV Shows
 SELECT 
@@ -86,21 +86,50 @@ WHERE genre IS NOT NULL AND genre <> ''
 GROUP BY genre
 ORDER BY total_titles DESC;
 
--- 10. List all movies that are documentaries
+-- 10. Top 5 years with highest avg content released by India
+SELECT 
+    release_year,
+    COUNT(*) AS total_release,
+    ROUND(COUNT(*) / total.total_count * 100, 2) AS avg_release
+FROM netflix,
+     (SELECT COUNT(*) AS total_count FROM netflix WHERE country LIKE '%India%') AS total
+WHERE country LIKE '%India%'
+GROUP BY release_year, total.total_count
+ORDER BY avg_release DESC
+LIMIT 5;
+
+-- 11. List all movies that are documentaries
 SELECT * FROM netflix
 WHERE listed_in LIKE '%Documentaries%';
 
--- 11. Find all content without a director
+-- 12. Find all content without a director
 SELECT * FROM netflix
 WHERE director IS NULL OR director = '';
 
--- 12. How many movies actor 'Salman Khan' appeared in last 10 years
+-- 13. How many movies actor 'Salman Khan' appeared in last 10 years
 SELECT * FROM netflix
 WHERE 
     casts LIKE '%Salman Khan%'
     AND release_year > YEAR(CURDATE()) - 10;
-  
--- 13. Categorize content as 'Good' or 'Bad' based on description
+
+-- 14. Top 10 actors with most appearances in Indian content
+SELECT 
+    actor,
+    COUNT(*) AS appearances
+FROM (
+    SELECT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(casts, ',', n.n), ',', -1)) AS actor
+    FROM netflix
+    JOIN (
+        SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+    ) AS n
+    ON CHAR_LENGTH(casts) - CHAR_LENGTH(REPLACE(casts, ',', '')) >= n.n - 1
+    WHERE country LIKE '%India%' AND casts IS NOT NULL
+) AS actor_list
+GROUP BY actor
+ORDER BY appearances DESC
+LIMIT 10;
+
+-- 15. Categorize content as 'Good' or 'Bad' based on description
 SELECT 
     category,
     show_type,
