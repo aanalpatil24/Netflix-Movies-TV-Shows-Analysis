@@ -2,6 +2,8 @@
 
 [![SQL](https://img.shields.io/badge/SQL-Skills-blue)](https://www.sql.org/)  
 [![Python](https://img.shields.io/badge/Python-EDA-green)](https://www.python.org/)  
+[![Data Analysis](https://img.shields.io/badge/Data-Analysis-orange)](https://www.python.org/)
+
 
 ![](https://github.com/aanalpatil24/Netflix_Sql_Analysis/blob/dcae74132dd5bb9e58464137e0ab2742c5b60ec6/logo.png)
 
