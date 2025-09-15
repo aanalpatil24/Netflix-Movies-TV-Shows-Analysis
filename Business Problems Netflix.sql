@@ -1,4 +1,4 @@
--- 15 Business Problems & Solutions
+-- 15 Business Problems
 
 1. Count the number of Movies vs TV Shows
 2. Find the most common rating for movies and TV shows
