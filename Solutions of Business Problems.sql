@@ -34,6 +34,7 @@ show_type='Movie' AND
 release_year = 2020;
 
 -- 4. Top 5 countries with the most content
+
 SELECT 
     TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(country, ',', n), ',', -1)) AS country,
     COUNT(DISTINCT show_id) AS total_content
@@ -76,6 +77,7 @@ WHERE
     AND CAST(SUBSTRING_INDEX(duration, ' ', 1) AS UNSIGNED) > 5;
 
 -- 9. Number of content items in each genre
+
 SELECT 
     TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(listed_in, ',', n), ',', -1)) AS genre,
     COUNT(DISTINCT show_id) AS total_titles
@@ -91,6 +93,7 @@ GROUP BY genre
 ORDER BY total_titles DESC;
 
 -- 10.Top 5 years with the highest number of content items released by India (as percentage of total Indian content)
+
 SET @total_india := (SELECT COUNT(*) FROM netflix WHERE country LIKE '%India%');
 
 SELECT 
@@ -120,6 +123,7 @@ WHERE
     AND release_year >= YEAR(CURDATE()) - 10;
 
 -- 14. Top 10 actors with most appearances in Indian content
+
 SELECT 
     TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(casts, ',', n), ',', -1)) AS actor,
     COUNT(*) AS appearances
@@ -137,6 +141,7 @@ ORDER BY appearances DESC
 LIMIT 10;
 
 -- 15. Categorize content as 'Good' or 'Bad' based on description
+
 SELECT 
     content_category AS category,
     show_type,
