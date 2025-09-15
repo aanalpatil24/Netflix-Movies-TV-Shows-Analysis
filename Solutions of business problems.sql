@@ -1,4 +1,5 @@
 -- Netflix Movies & TV Shows Analysis Project
+
 -- Solutions of 15 Business Problems
 
 -- 1. Count the number of Movies and TV Shows
@@ -12,8 +13,8 @@ ORDER BY total;
 -- 2. Find the most common rating for movies and TV shows
 SELECT 
     show_type, 
-    rating_count,
-    rating AS most_frequent_rating
+    rating AS most_frequent_rating,
+     rating_count
 FROM (
     SELECT 
         show_type,
@@ -34,9 +35,15 @@ release_year = 2020;
 
 -- 4. Top 5 countries with the most content
 SELECT 
-    TRIM(SUBSTRING_INDEX(country, ',', 1)) AS country,
-    COUNT(*) AS total_content
+    TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(country, ',', n), ',', -1)) AS country,
+    COUNT(DISTINCT show_id) AS total_content
 FROM netflix
+JOIN (
+    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+    UNION ALL SELECT 9 UNION ALL SELECT 10
+) AS numbers
+  ON numbers.n <= 1 + CHAR_LENGTH(country) - CHAR_LENGTH(REPLACE(country, ',', ''))
 WHERE country IS NOT NULL AND country <> ''
 GROUP BY country
 ORDER BY total_content DESC
@@ -70,77 +77,80 @@ WHERE
 
 -- 9. Number of content items in each genre
 SELECT 
-  genre,
-  COUNT(*) AS total_titles
-FROM (
-    SELECT DISTINCT show_id, TRIM(SUBSTRING_INDEX(listed_in, ',', 1)) AS genre FROM netflix
-    WHERE listed_in IS NOT NULL
-    UNION
-    SELECT DISTINCT show_id, TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(listed_in, ',', 2), ',', -1)) FROM netflix
-    WHERE listed_in IS NOT NULL
-    UNION
-    SELECT DISTINCT show_id, TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(listed_in, ',', 3), ',', -1)) FROM netflix
-    WHERE listed_in IS NOT NULL
-) AS all_genres
-WHERE genre IS NOT NULL AND genre <> ''
+    TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(listed_in, ',', n), ',', -1)) AS genre,
+    COUNT(DISTINCT show_id) AS total_titles
+FROM netflix
+JOIN (
+    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+    UNION ALL SELECT 9 UNION ALL SELECT 10
+) AS numbers
+  ON numbers.n <= 1 + CHAR_LENGTH(listed_in) - CHAR_LENGTH(REPLACE(listed_in, ',', ''))
+WHERE listed_in IS NOT NULL
 GROUP BY genre
 ORDER BY total_titles DESC;
 
--- 10. Top 5 years with highest avg content released by India
+-- 10.Top 5 years with the highest number of content items released by India (as percentage of total Indian content)
+SET @total_india := (SELECT COUNT(*) FROM netflix WHERE country LIKE '%India%');
+
 SELECT 
     release_year,
     COUNT(*) AS total_release,
-    ROUND(COUNT(*) / total.total_count * 100, 2) AS avg_release
-FROM netflix,
-     (SELECT COUNT(*) AS total_count FROM netflix WHERE country LIKE '%India%') AS total
+    ROUND(COUNT(*) / @total_india * 100, 2) AS release_percentage
+FROM netflix
 WHERE country LIKE '%India%'
-GROUP BY release_year, total.total_count
-ORDER BY avg_release DESC
+GROUP BY release_year
+ORDER BY release_percentage DESC
 LIMIT 5;
+
 
 -- 11. List all movies that are documentaries
 SELECT * FROM netflix
-WHERE listed_in LIKE '%Documentaries%';
+WHERE show_type = 'Movie' AND listed_in LIKE '%Documentaries%';
+
 
 -- 12. Find all content without a director
 SELECT * FROM netflix
 WHERE director IS NULL OR director = '';
 
 -- 13. How many movies actor 'Salman Khan' appeared in last 10 years
-SELECT * FROM netflix
+SELECT COUNT(*) FROM netflix
 WHERE 
     casts LIKE '%Salman Khan%'
-    AND release_year > YEAR(CURDATE()) - 10;
+    AND release_year >= YEAR(CURDATE()) - 10;
 
 -- 14. Top 10 actors with most appearances in Indian content
 SELECT 
-    actor,
+    TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(casts, ',', n), ',', -1)) AS actor,
     COUNT(*) AS appearances
-FROM (
-    SELECT TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(casts, ',', n.n), ',', -1)) AS actor
-    FROM netflix
-    JOIN (
-        SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
-    ) AS n
-    ON CHAR_LENGTH(casts) - CHAR_LENGTH(REPLACE(casts, ',', '')) >= n.n - 1
-    WHERE country LIKE '%India%' AND casts IS NOT NULL
-) AS actor_list
+FROM netflix
+JOIN (
+    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+    UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+    UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 
+    UNION ALL SELECT 13  UNION ALL SELECT 14  UNION ALL SELECT 15
+) AS numbers
+  ON numbers.n <= 1 + CHAR_LENGTH(casts) - CHAR_LENGTH(REPLACE(casts, ',', ''))
+WHERE country LIKE '%India%' AND casts IS NOT NULL
 GROUP BY actor
 ORDER BY appearances DESC
 LIMIT 10;
 
 -- 15. Categorize content as 'Good' or 'Bad' based on description
 SELECT 
-    category,
+    content_category AS category,
     show_type,
     COUNT(*) AS content_count
 FROM (
     SELECT *,
            CASE 
-               WHEN LOWER(show_description) LIKE '%kill%' OR LOWER(show_description) LIKE '%violence%' THEN 'Bad'
+               WHEN LOWER(show_description) LIKE '%kill%' 
+               OR LOWER(show_description) LIKE '%violence%' THEN 'Bad'
                ELSE 'Good'
-           END AS category
+           END AS content_category
     FROM netflix
 ) AS labeled
-GROUP BY category, show_type
+GROUP BY content_category, show_type
 ORDER BY show_type;
+
+-- End of the Project
