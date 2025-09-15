@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS netflix;
 
 -- Create table
 CREATE TABLE netflix (
-    show_id  VARCHAR(10),
+    show_id  VARCHAR(10) PRIMARY KEY,
     show_type  VARCHAR(20),
     title  VARCHAR(255),
     director TEXT,
