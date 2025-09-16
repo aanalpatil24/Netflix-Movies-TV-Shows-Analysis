@@ -79,7 +79,7 @@ WHERE
 -- 9. Number of content items in each genre
 
 SELECT 
-    TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(listed_in, ',', n), ',', -1)) AS genre,
+    TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(genre, ',', n), ',', -1)) AS genre,
     COUNT(DISTINCT show_id) AS total_titles
 FROM netflix
 JOIN (
@@ -87,8 +87,8 @@ JOIN (
     UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
     UNION ALL SELECT 9 UNION ALL SELECT 10
 ) AS numbers
-  ON numbers.n <= 1 + CHAR_LENGTH(listed_in) - CHAR_LENGTH(REPLACE(listed_in, ',', ''))
-WHERE listed_in IS NOT NULL
+  ON numbers.n <= 1 + CHAR_LENGTH(genre) - CHAR_LENGTH(REPLACE(genre, ',', ''))
+WHERE genre IS NOT NULL
 GROUP BY genre
 ORDER BY total_titles DESC;
 
@@ -109,7 +109,7 @@ LIMIT 5;
 
 -- 11. List all movies that are documentaries
 SELECT * FROM netflix
-WHERE show_type = 'Movie' AND listed_in LIKE '%Documentaries%';
+WHERE show_type = 'Movie' AND genre LIKE '%Documentaries%';
 
 
 -- 12. Find all content without a director
