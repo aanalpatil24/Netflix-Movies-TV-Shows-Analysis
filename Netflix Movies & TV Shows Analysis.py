@@ -53,7 +53,7 @@ q8 = df[(df['show_type']=='TV Show') & (df['duration_num']>5)]
 print(q8)
 
 # 9. Number of content items in each genre
-df['genre_list'] = df['listed_in'].dropna().str.split(',').apply(lambda x: [g.strip() for g in x] if isinstance(x, list) else [])
+df['genre_list'] = df['genre'].dropna().str.split(',').apply(lambda x: [g.strip() for g in x] if isinstance(x, list) else [])
 genre_exploded = df.explode('genre_list')
 q9 = genre_exploded.groupby('genre_list')['show_id'].nunique().reset_index(name='total_titles') \
       .sort_values('total_titles', ascending=False)
@@ -68,7 +68,7 @@ q10 = q10.sort_values('release_percentage', ascending=False).head(5)
 print(q10)
 
 # 11. List all documentaries
-q11 = df[df['listed_in'].str.contains('Documentaries', na=False)]
+q11 = df[df['genre'].str.contains('Documentaries', na=False)]
 print(q11)
 
 # 12. Find all content without a director
@@ -99,3 +99,4 @@ print(q15)
 
 
 # End of the Project
+
