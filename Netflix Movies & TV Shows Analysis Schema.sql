@@ -20,7 +20,7 @@ CREATE TABLE netflix (
     release_year INT,
     rating  VARCHAR(20),
     duration  VARCHAR(20),
-    listed_in TEXT,
+    genre TEXT,
     show_description  TEXT
 );
 
