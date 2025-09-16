@@ -4,7 +4,7 @@
 CREATE DATABASE IF NOT EXISTS Netflix_DB;
 USE Netflix_DB;
 -- DROP DATABaSE IF EXISTS Netflix_DB;
--- SCHEMAS of Netflix
+-- SCHEMA of Netflix_DB
 -- Drop table if it exists
 DROP TABLE IF EXISTS netflix;
 
