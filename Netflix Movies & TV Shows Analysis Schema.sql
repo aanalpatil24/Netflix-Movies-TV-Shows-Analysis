@@ -1,5 +1,5 @@
 -- Netflix Movies & TV Shows Analysis Project
-
+-- Commencement of the project
 -- Create and use the database
 CREATE DATABASE IF NOT EXISTS netflix_db;
 USE netflix_db;
