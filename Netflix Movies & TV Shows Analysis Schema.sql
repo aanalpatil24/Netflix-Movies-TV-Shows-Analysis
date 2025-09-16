@@ -1,9 +1,9 @@
 -- Netflix Movies & TV Shows Analysis Project
 -- Commencement of the project
 -- Create and use the database
-CREATE DATABASE IF NOT EXISTS netflix_db;
-USE netflix_db;
--- DROP DATABaSE IF EXISTS netflix_db;
+CREATE DATABASE IF NOT EXISTS Netflix_DB;
+USE Netflix_DB;
+-- DROP DATABaSE IF EXISTS Netflix_DB;
 -- SCHEMAS of Netflix
 -- Drop table if it exists
 DROP TABLE IF EXISTS netflix;
