@@ -51,7 +51,7 @@ ORDER BY total_content DESC
 LIMIT 5;
 
 
--- 5. Identify the 5 longest movie
+-- 5. Identify the 5 longest movies
 SELECT *
 FROM netflix
 WHERE show_type = 'Movie'
@@ -88,7 +88,7 @@ JOIN (
     UNION ALL SELECT 9 UNION ALL SELECT 10
 ) AS numbers
   ON numbers.n <= 1 + CHAR_LENGTH(genre) - CHAR_LENGTH(REPLACE(genre, ',', ''))
-WHERE genre IS NOT NULL
+WHERE genre IS NOT NULL AND genre <> ''
 GROUP BY genre
 ORDER BY total_titles DESC;
 
@@ -122,7 +122,7 @@ WHERE
     casts LIKE '%Salman Khan%'
     AND release_year >= YEAR(CURDATE()) - 10;
 
--- 14. Top 10 actors with most appearances in Indian content
+-- 14. Top 10 actors with the most appearances in Indian content
 
 SELECT 
     TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(casts, ',', n), ',', -1)) AS actor,
@@ -135,12 +135,12 @@ JOIN (
     UNION ALL SELECT 13  UNION ALL SELECT 14  UNION ALL SELECT 15
 ) AS numbers
   ON numbers.n <= 1 + CHAR_LENGTH(casts) - CHAR_LENGTH(REPLACE(casts, ',', ''))
-WHERE country LIKE '%India%' AND casts IS NOT NULL
+WHERE country LIKE '%India%' AND casts IS NOT NULL AND casts <> ''
 GROUP BY actor
 ORDER BY appearances DESC
 LIMIT 10;
 
--- 15. Categorize content as 'Good' or 'Bad' based on description
+-- 15. Categorize content as 'Good' or 'Bad' based on the description
 
 SELECT 
     content_category AS category,
@@ -154,7 +154,7 @@ FROM (
                ELSE 'Good'
            END AS content_category
     FROM netflix
-) AS labeled
+) AS labelled
 GROUP BY content_category, show_type
 ORDER BY show_type;
 
